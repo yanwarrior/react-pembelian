@@ -4,7 +4,7 @@ Aplikasi sistem informasi pembelian barang atau layanan secara online atau offli
 
 Aplikasi ini membutuhkan API yang bisa kamu peroleh pada tautan berikut:
 
-[Django API Pembelian]()
+[Django API Pembelian](https://github.com/yanwarrior/django-api-pembelian)
 
 ## Instalasi
 
