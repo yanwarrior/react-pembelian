@@ -8,6 +8,7 @@ import PembelianIcon from "../../assets/pembelian/pembelian.svg"
 import HutangIcon from "../../assets/pembelian/hutang.svg"
 import FormSupplier from "./forms/FormSupplier.jsx";
 import formSupplier from "./forms/FormSupplier.jsx";
+import FormSignIn from "./forms/FormSignIn.jsx";
 
 const Pembelian = () => {
   const [formPembelianDetail, setFormPembelianDetail] = useState(false);
@@ -40,6 +41,7 @@ const Pembelian = () => {
       <FormPembelian visible={formPembelianDetail} setVisible={setFormPembelianDetail} />
       <FormBarang visible={formBarang} setVisible={setFormBarang} />
       <FormSupplier visible={formSupplier} setVisible={setFormSupplier} />
+      <FormSignIn />
       <div className="card dock-demo">
         <div className="dock-window"
              style={{backgroundImage: 'url(https://primefaces.org/cdn/primereact/images/dock/window.jpg)'}}>

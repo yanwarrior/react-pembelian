@@ -52,3 +52,14 @@ export const SUPPLIER_VALIDATOR = {
   bank: [],
   rekening: []
 }
+
+export const USER = {
+  username: "",
+  password: ""
+}
+
+export const USER_VALIDATOR = {
+  username: [],
+  password: []
+}
+
