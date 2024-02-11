@@ -23,6 +23,7 @@ import {DataTable} from "primereact/datatable";
 import PrimeWidgetSearch from "../../primes/widgets/PrimeWidgetSearch.jsx";
 import {Column} from "primereact/column";
 import WidgetPembelianChoice from "../widgets/WidgetPembelianChoice.jsx";
+import WidgetSupplierChoice from "../widgets/WidgetSupplierChoice.jsx";
 
 const FormPembelian = ({ visible, setVisible }) => {
   const navigate = useNavigate();
@@ -129,10 +130,6 @@ const FormPembelian = ({ visible, setVisible }) => {
     }
   }
 
-  const onPembelianUpdateTanggal = (e) => {
-    onPembelianUpdate({tanggal: e.target.value})
-  }
-
   const onCallbackWidgetPembelianChoice = (value) => {
     console.log(Date.parse(value.tanggal))
     setDate(new Date(Date.parse(value.tanggal)))
@@ -178,12 +175,14 @@ const FormPembelian = ({ visible, setVisible }) => {
     http.privateHTTP.post(url, payload, config)
       .then((response) => {
         message.success(response);
-        onItemList()
-        onPembelianDetail();
-        onPembayaranDetail();
       })
       .catch((error) => {
         message.error(error);
+      })
+      .finally(() => {
+        onItemList()
+        onPembelianDetail();
+        onPembayaranDetail();
       })
   }
 
@@ -330,7 +329,7 @@ const FormPembelian = ({ visible, setVisible }) => {
                   value={pembelian.nomor_supplier}
                   className={`${pembelianValidator.primeInvalidField('nomor')}`}
                 />
-                <Button>Supplier</Button>
+                <WidgetSupplierChoice callback={callbackWidgetSupplierChoice} />
               </div>
             </div>
           </div>
