@@ -25,6 +25,7 @@ import {Column} from "primereact/column";
 import WidgetPembelianChoice from "../widgets/WidgetPembelianChoice.jsx";
 import WidgetSupplierChoice from "../widgets/WidgetSupplierChoice.jsx";
 import {InputNumber} from "primereact/inputnumber";
+import WidgetBarangChoice from "../widgets/WidgetBarangChoice.jsx";
 
 const FormPembelian = ({ visible, setVisible }) => {
   const navigate = useNavigate();
@@ -392,7 +393,12 @@ const FormPembelian = ({ visible, setVisible }) => {
         <DataTable
           value={daftarItem}
           showGridlines={true}
-          header={<PrimeWidgetSearch callback={() => {}} className={"w-7"} />}
+          header={(
+            <div className="flex justify-content-between">
+              <PrimeWidgetSearch callback={() => {}} className={"w-7"} />
+              <WidgetBarangChoice callback={callbackWidgetBarangChoice} />
+            </div>
+          )}
         >
           <Column field={"nama_barang"} header={"Nama"}></Column>
           <Column field={"satuan"} header={"Satuan"}></Column>
