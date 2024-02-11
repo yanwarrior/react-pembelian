@@ -24,6 +24,7 @@ import PrimeWidgetSearch from "../../primes/widgets/PrimeWidgetSearch.jsx";
 import {Column} from "primereact/column";
 import WidgetPembelianChoice from "../widgets/WidgetPembelianChoice.jsx";
 import WidgetSupplierChoice from "../widgets/WidgetSupplierChoice.jsx";
+import {InputNumber} from "primereact/inputnumber";
 
 const FormPembelian = ({ visible, setVisible }) => {
   const navigate = useNavigate();
@@ -63,6 +64,23 @@ const FormPembelian = ({ visible, setVisible }) => {
       console.log(error)
       message.error(error)
     }
+  }
+
+  const onPembelianCreate = () => {
+    const url = `${BASE_URL}/pembelian/`;
+    const config = {
+      headers: {
+        Authorization: jwt.get()
+      }
+    }
+
+    http.privateHTTP.post(url, null, config)
+      .then((response) => {
+        setPembelian(response.data)
+      })
+      .catch((error) => {
+        message.error(error);
+      })
   }
 
   const onPembelianUpdate = (payload) => {
@@ -186,15 +204,15 @@ const FormPembelian = ({ visible, setVisible }) => {
       })
   }
 
-  const onItemUpdate = () => {
-    const url = `${BASE_URL}/pembelian/${pembelian.id}/items/${item.id}/`;
+  const onItemUpdate = (payload) => {
+    const url = `${BASE_URL}/pembelian/${pembelian.id}/items/${payload.id}/`;
     const config = {
       headers: {
         Authorization: jwt.get()
       }
     }
-
-    http.privateHTTP.put(url, item, config)
+    payload = {...item, ...payload}
+    http.privateHTTP.put(url, payload, config)
       .then(() => {
         onItemList()
         setItem(itemInit);
@@ -275,6 +293,13 @@ const FormPembelian = ({ visible, setVisible }) => {
       })
   }
 
+  useEffect(() => {
+    if (pembelian.id) {
+      onItemList();
+      onPembayaranDetail();
+    }
+  }, [pembelian]);
+
   return (
     <>
       <Dialog
@@ -294,6 +319,7 @@ const FormPembelian = ({ visible, setVisible }) => {
             <div className="field col">
               <label>Nomor</label>
               <div className="p-inputgroup flex-1 w-full">
+                <Button onClick={onPembelianCreate}>Baru</Button>
                 <InputText
                   disabled={pembelian.id}
                   value={pembelian.nomor}
@@ -369,6 +395,26 @@ const FormPembelian = ({ visible, setVisible }) => {
           header={<PrimeWidgetSearch callback={() => {}} className={"w-7"} />}
         >
           <Column field={"nama_barang"} header={"Nama"}></Column>
+          <Column field={"satuan"} header={"Satuan"}></Column>
+          <Column field={"jenis"} header={"Jenis"}></Column>
+          <Column
+            field={"harga"}
+            header={"Harga"}
+            editor={(options) => (
+              <InputNumber
+                value={options.value}
+                onValueChange={(e) => options.editorCallback(e.value)}
+              />
+            )}
+            onCellEditComplete={(e) => {
+              onItemUpdate(e.value)
+            }}
+          ></Column>
+          <Column field={"diskon"} header={"Diskon"}></Column>
+          <Column field={"quantity"} header={"Quantity"}></Column>
+          <Column field={"stok_barang"} header={"Stok"}></Column>
+          <Column field={"saldo"} header={"Saldo"}></Column>
+          <Column field={"total"} header={"Total"}></Column>
         </DataTable>
       </Dialog>
     </>
