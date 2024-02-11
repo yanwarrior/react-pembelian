@@ -77,12 +77,12 @@ const FormPembelian = ({ visible, setVisible }) => {
       .then((response) => {
         setPembelian(response.data);
         tanggalref.current.value = response.data.tanggal;
-        onPembayaranDetail()
       })
       .catch((error) => {
         pembelianValidator.except(error)
         message.error(error)
       })
+      .finally(() => onPembayaranDetail())
   }
 
   const onPembelianDelete = () => {
@@ -134,6 +134,8 @@ const FormPembelian = ({ visible, setVisible }) => {
   }
 
   const onCallbackWidgetPembelianChoice = (value) => {
+    console.log(Date.parse(value.tanggal))
+    setDate(new Date(Date.parse(value.tanggal)))
     setPembelian(value);
   }
 
@@ -305,11 +307,8 @@ const FormPembelian = ({ visible, setVisible }) => {
             <div className="field col">
               <label>Tanggal</label>
               <Calendar
-                value={date}
-                onChange={(e) => {
-                  setDate(e.value)
-                  changeListener.changeText('tanggal', e.value.toISOString(), pembelian, setPembelian)
-                }}
+                value={new Date(Date.parse(pembelian.tanggal))}
+                onChange={(e) => onPembelianUpdate({tanggal: e.value})}
                 className={`w-full ${pembelianValidator.primeInvalidField('tanggal')}`}
               />
             </div>
