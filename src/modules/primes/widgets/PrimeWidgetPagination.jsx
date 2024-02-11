@@ -7,7 +7,7 @@ const PrimeWidgetPagination = ({ pagination, callback }) => {
       <Button disabled={!pagination.previous} onClick={() => callback(true)}>
         Previous
       </Button>
-      <Button disabled={!pagination.next} onClick={callback}>
+      <Button disabled={!pagination.next} onClick={() => callback(false)}>
         Next
       </Button>
     </>

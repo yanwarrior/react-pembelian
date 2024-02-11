@@ -11,34 +11,35 @@ import formSupplier from "./forms/FormSupplier.jsx";
 import FormSignIn from "./forms/FormSignIn.jsx";
 
 const Pembelian = () => {
-  const [formPembelianDetail, setFormPembelianDetail] = useState(false);
   const [formBarang, setFormBarang] = useState(false);
   const [formSupplier, setFormSupplier] = useState(false);
+  const [formPembelian, setFormPembelian] = useState(false);
 
   const items = [
     {
-      label: 'Finder',
+      label: 'Barang',
       icon: () => <img alt="Finder" src={BarangLogo} width="100%" />,
       command: () => setFormBarang(true)
     },
     {
-      label: 'App Store',
+      label: 'Supplier',
       icon: () => <img alt="App Store" src={SupplierIcon} width="100%" />,
       command: () => setFormSupplier(true)
     },
     {
-      label: 'Photos',
+      label: 'Pembelian',
       icon: () => <img alt="Photos" src={PembelianIcon} width="100%" />,
+      command: () => setFormPembelian(true)
     },
     {
-      label: 'Trash',
+      label: 'Hutang',
       icon: () => <img alt="trash" src={HutangIcon} width="100%" />,
     }
   ];
 
   return (
     <>
-      <FormPembelian visible={formPembelianDetail} setVisible={setFormPembelianDetail} />
+      <FormPembelian visible={formPembelian} setVisible={setFormPembelian} />
       <FormBarang visible={formBarang} setVisible={setFormBarang} />
       <FormSupplier visible={formSupplier} setVisible={setFormSupplier} />
       <FormSignIn />

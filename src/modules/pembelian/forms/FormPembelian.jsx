@@ -14,6 +14,15 @@ import {BASE_URL} from "../../../libs/config/settings.js";
 import {Dialog} from "primereact/dialog";
 import PropTypes from "prop-types";
 import {PROP_TYPES} from "../settings.jsx";
+import {Fieldset} from "primereact/fieldset";
+import PrimeWidgetBarcode from "../../primes/widgets/PrimeWidgetBarcode.jsx";
+import {InputText} from "primereact/inputtext";
+import {Button} from "primereact/button";
+import {Calendar} from "primereact/calendar";
+import {DataTable} from "primereact/datatable";
+import PrimeWidgetSearch from "../../primes/widgets/PrimeWidgetSearch.jsx";
+import {Column} from "primereact/column";
+import WidgetPembelianChoice from "../widgets/WidgetPembelianChoice.jsx";
 
 const FormPembelian = ({ visible, setVisible }) => {
   const navigate = useNavigate();
@@ -21,11 +30,12 @@ const FormPembelian = ({ visible, setVisible }) => {
   const jwt = useJWT();
   const message = useMessage();
   const formatter = useFormatter()
-  const onChangeListener = useChangeListener();
+  const changeListener = useChangeListener();
 
   const [pembelian, setPembelian] = useState(pembelianInit);
   const pembelianValidator = useValidator(pembelianValidatorInit);
   const tanggalref = useRef({value: ""})
+  const [date, setDate] = useState(null);
 
   const [daftarItem, setDaftarItem] = useState([]);
   const [item, setItem] = useState(itemInit);
@@ -123,11 +133,9 @@ const FormPembelian = ({ visible, setVisible }) => {
     onPembelianUpdate({tanggal: e.target.value})
   }
 
-  // useEffect(() => {
-  //   if (state.id) {
-  //     onPembelianDetail()
-  //   }
-  // }, [state.id])
+  const onCallbackWidgetPembelianChoice = (value) => {
+    setPembelian(value);
+  }
 
   const onItemList = (url, params) => {
     url = url ? url : `${BASE_URL}/pembelian/${pembelian.id}/items/`;
@@ -228,12 +236,6 @@ const FormPembelian = ({ visible, setVisible }) => {
     onItemCreate(payload)
   }
 
-  // useEffect(() => {
-  //   if (state.id) {
-  //     onItemList()
-  //   }
-  // }, [state.id])
-
 
   const onPembayaranDetail = () => {
     const url = `${BASE_URL}/pembelian/${pembelian.id}/pembayaran/`;
@@ -272,16 +274,104 @@ const FormPembelian = ({ visible, setVisible }) => {
       })
   }
 
-  // useEffect(() => {
-  //   if (state.id) {
-  //     onPembayaranDetail()
-  //   }
-  // }, [state.id]);
-
   return (
     <>
-      <Dialog  visible={visible} onHide={() => setVisible(!visible)}>
-        <p>Lorem</p>
+      <Dialog
+        maximizable={true}
+        resizable={true}
+        header={"Pembelian"}
+        visible={visible}
+        onHide={() => setVisible(!visible)}
+      >
+        <Fieldset legend={"Detail Pembelian"} className={"mb-3"}>
+          <div className="formgrid grid">
+            <div className="field col">
+              <PrimeWidgetBarcode value={pembelian.nomor || "BLI-XXXX"}/>
+            </div>
+          </div>
+          <div className="formgrid grid">
+            <div className="field col">
+              <label>Nomor</label>
+              <div className="p-inputgroup flex-1 w-full">
+                <InputText
+                  disabled={pembelian.id}
+                  value={pembelian.nomor}
+                  onChange={(e) => changeListener.changeText('nomor', e.target.value, pembelian, setPembelian)}
+                  className={`${pembelianValidator.primeInvalidField('nomor')}`}
+                />
+                <WidgetPembelianChoice callback={onCallbackWidgetPembelianChoice} />
+              </div>
+            </div>
+            <div className="field col">
+              <label>Tanggal</label>
+              <Calendar
+                value={date}
+                onChange={(e) => {
+                  setDate(e.value)
+                  changeListener.changeText('tanggal', e.value.toISOString(), pembelian, setPembelian)
+                }}
+                className={`w-full ${pembelianValidator.primeInvalidField('tanggal')}`}
+              />
+            </div>
+            <div className="field col">
+              <label>Nama Supplier</label>
+              <InputText
+                disabled={true}
+                readOnly={true}
+                value={pembelian.nama_supplier}
+                className={"w-full"}
+              />
+            </div>
+            <div className="field col">
+              <label>Nomor Supplier</label>
+              <div className="p-inputgroup flex-1 w-full">
+                <InputText
+                  disabled={true}
+                  readOnly={true}
+                  value={pembelian.nomor_supplier}
+                  className={`${pembelianValidator.primeInvalidField('nomor')}`}
+                />
+                <Button>Supplier</Button>
+              </div>
+            </div>
+          </div>
+          <div className="formgrid grid">
+            <div className="field col">
+              <label>Status Pembelian</label>
+              <InputText
+                disabled={true}
+                readOnly={true}
+                value={pembelian.pembayaran_lunas ? "Lunas" : "Belum Lunas"}
+                className={"w-full"}
+              />
+            </div>
+            <div className="field col">
+              <label>Pembayaran</label>
+              <InputText
+                disabled={true}
+                readOnly={true}
+                value={pembelian.metode_pembayaran}
+                className={"w-full"}
+              />
+            </div>
+            <div className="field col">
+              <label>Jumlah Barang</label>
+              <InputText
+                disabled={true}
+                readOnly={true}
+                value={pembelian.jumlah_barang}
+                className={"w-full"}
+              />
+            </div>
+          </div>
+        </Fieldset>
+        <DataTable
+          value={daftarItem}
+          showGridlines={true}
+          header={<PrimeWidgetSearch callback={() => {}} className={"w-7"} />}
+        >
+          <Column field={"nama_barang"} header={"Nama"}></Column>
+        </DataTable>
       </Dialog>
     </>
   )

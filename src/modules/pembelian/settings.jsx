@@ -63,3 +63,21 @@ export const USER_VALIDATOR = {
   password: []
 }
 
+export const PEMBELIAN = {
+  id: null,
+  nomor: "",
+  tanggal: "",
+  supplier: null,
+  user: null,
+  is_draft: null,
+  nama_supplier: "",
+  nomor_supplier: "",
+  pembayaran_lunas: null,
+  jumlah_barang: 0,
+  metode_pembayaran: "",
+}
+
+export const PEMBELIAN_VALIDATOR = {
+  tanggal: [],
+  supplier: []
+}
