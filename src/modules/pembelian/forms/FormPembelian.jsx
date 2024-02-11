@@ -225,8 +225,8 @@ const FormPembelian = ({ visible, setVisible }) => {
       })
   }
 
-  const onItemDelete = () => {
-    const url = `${BASE_URL}/pembelian/${pembelian.id}/items/${item.id}/`;
+  const onItemDelete = (id) => {
+    const url = `${BASE_URL}/pembelian/${pembelian.id}/items/${id}/`;
     const config = {
       headers: {
         Authorization: jwt.get()
@@ -236,12 +236,13 @@ const FormPembelian = ({ visible, setVisible }) => {
     http.privateHTTP.delete(url, config)
       .then(() => {
         onItemList()
-        setItem(itemInit);
-        onPembayaranDetail()
-        onPembelianDetail()
       })
       .catch((error) => {
         message.error(error)
+      })
+      .finally(() => {
+        onPembayaranDetail()
+        onPembelianDetail()
       })
   }
 
@@ -399,6 +400,11 @@ const FormPembelian = ({ visible, setVisible }) => {
               <WidgetBarangChoice callback={callbackWidgetBarangChoice} />
             </div>
           )}
+          editMode="row"
+          dataKey="id"
+          onRowEditComplete={(e) => {
+            onItemUpdate(e.newData)
+          }}
         >
           <Column field={"nama_barang"} header={"Nama"}></Column>
           <Column field={"satuan"} header={"Satuan"}></Column>
@@ -412,15 +418,19 @@ const FormPembelian = ({ visible, setVisible }) => {
                 onValueChange={(e) => options.editorCallback(e.value)}
               />
             )}
-            onCellEditComplete={(e) => {
-              onItemUpdate(e.value)
-            }}
           ></Column>
-          <Column field={"diskon"} header={"Diskon"}></Column>
-          <Column field={"quantity"} header={"Quantity"}></Column>
+          <Column
+            field={"diskon"}
+            header={"Diskon"}
+          ></Column>
+          <Column
+            field={"quantity"}
+            header={"Quantity"}
+          ></Column>
           <Column field={"stok_barang"} header={"Stok"}></Column>
           <Column field={"saldo"} header={"Saldo"}></Column>
           <Column field={"total"} header={"Total"}></Column>
+          <Column rowEditor={() => pembelian.is_draft} bodyStyle={{ textAlign: 'center' }}></Column>
         </DataTable>
       </Dialog>
     </>
