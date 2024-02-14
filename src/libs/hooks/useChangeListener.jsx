@@ -26,7 +26,30 @@ const useChangeListener = () => {
     }
   }
 
-  return {onChangeText, onChangeNumber, changeText, changeNumber}
+  const textChange = (field, value, hook) => {
+    hook.data.setState({...hook.data.state, [field]: value});
+  }
+
+  const numChange = (field, value, hook) => {
+    value = parseInt(Number(value).toString())
+    hook.data.setState({...hook.data.state, [field]: value})
+  }
+
+  const change = (field, value, hook, num) => {
+    if (num) {
+      numChange(field, value, hook)
+    } else {
+      textChange(field, value, hook)
+    }
+  }
+
+  return {
+    onChangeText,
+    onChangeNumber,
+    changeText,
+    changeNumber,
+    change,
+  }
 }
 
 export default useChangeListener;

@@ -10,10 +10,10 @@ import useValidator from "../../../libs/hooks/useValidator.jsx";
 import {itemInit, itemValidatorInit} from "../../../data/item.js";
 import {paginationInit} from "../../../data/commons.js";
 import {pembayaranInit, pembayaranValidatorInit} from "../../../data/pembayaran.js";
-import {BASE_URL} from "../../../libs/config/settings.js";
+import {BASE_URL, CURRENCY, LOCALE} from "../../../libs/config/settings.js";
 import {Dialog} from "primereact/dialog";
 import PropTypes from "prop-types";
-import {PROP_TYPES} from "../settings.jsx";
+import {ITEM, PROP_TYPES} from "../settings.jsx";
 import {Fieldset} from "primereact/fieldset";
 import PrimeWidgetBarcode from "../../primes/widgets/PrimeWidgetBarcode.jsx";
 import {InputText} from "primereact/inputtext";
@@ -26,6 +26,9 @@ import WidgetPembelianChoice from "../widgets/WidgetPembelianChoice.jsx";
 import WidgetSupplierChoice from "../widgets/WidgetSupplierChoice.jsx";
 import {InputNumber} from "primereact/inputnumber";
 import WidgetBarangChoice from "../widgets/WidgetBarangChoice.jsx";
+import PrimeWidgetValidationMessage from "../../primes/widgets/PrimeWidgetValidationMessage.jsx";
+import {Chip} from "primereact/chip";
+import {Tag} from "primereact/tag";
 
 const FormPembelian = ({ visible, setVisible }) => {
   const navigate = useNavigate();
@@ -48,6 +51,9 @@ const FormPembelian = ({ visible, setVisible }) => {
   const [pembayaran, setPembayaran] = useState(pembayaranInit)
   const pembayaranValidator = useValidator(pembayaranValidatorInit)
 
+  const appRef = useRef(0)
+  const pembayaranRef = useRef(0)
+  const itemRef = useRef(0);
 
   const onPembelianDetail = async () => {
     try {
@@ -59,8 +65,6 @@ const FormPembelian = ({ visible, setVisible }) => {
       }
       const { data } = await http.privateHTTP.get(url, config)
       setPembelian(data);
-      tanggalref.current.value = data.tanggal;
-
     } catch (error) {
       console.log(error)
       message.error(error)
@@ -82,6 +86,7 @@ const FormPembelian = ({ visible, setVisible }) => {
       .catch((error) => {
         message.error(error);
       })
+      .finally(() => appRef.current += 1)
   }
 
   const onPembelianUpdate = (payload) => {
@@ -96,13 +101,12 @@ const FormPembelian = ({ visible, setVisible }) => {
     http.privateHTTP.put(url, payload, config)
       .then((response) => {
         setPembelian(response.data);
-        tanggalref.current.value = response.data.tanggal;
       })
       .catch((error) => {
         pembelianValidator.except(error)
         message.error(error)
       })
-      .finally(() => onPembayaranDetail())
+      .finally(() => appRef.current += 1)
   }
 
   const onPembelianDelete = () => {
@@ -117,11 +121,11 @@ const FormPembelian = ({ visible, setVisible }) => {
       http.privateHTTP.delete(url, config)
         .then((response) => {
           message.success(response)
-          navigate(-1)
         })
         .catch((error) => {
           message.error(error)
         })
+        .finally(() => appRef.current += 1)
     })
   }
 
@@ -136,11 +140,11 @@ const FormPembelian = ({ visible, setVisible }) => {
     http.privateHTTP.post(url, null, config)
       .then((response) => {
         message.success(response)
-        navigate(-1)
       })
       .catch((error) => {
         message.error(error)
       })
+      .finally(() => appRef.current += 1)
   }
 
   const callbackWidgetSupplierChoice = (value) => {
@@ -151,6 +155,7 @@ const FormPembelian = ({ visible, setVisible }) => {
 
   const onCallbackWidgetPembelianChoice = (value) => {
     console.log(Date.parse(value.tanggal))
+    appRef.current += 1;
     setDate(new Date(Date.parse(value.tanggal)))
     setPembelian(value);
   }
@@ -198,11 +203,7 @@ const FormPembelian = ({ visible, setVisible }) => {
       .catch((error) => {
         message.error(error);
       })
-      .finally(() => {
-        onItemList()
-        onPembelianDetail();
-        onPembayaranDetail();
-      })
+      .finally(() => appRef.current += 1)
   }
 
   const onItemUpdate = (payload) => {
@@ -214,15 +215,14 @@ const FormPembelian = ({ visible, setVisible }) => {
     }
     payload = {...item, ...payload}
     http.privateHTTP.put(url, payload, config)
-      .then(() => {
-        onItemList()
-        setItem(itemInit);
-        onPembayaranDetail()
+      .then((response) => {
+        setItem(response.data)
       })
       .catch((error) => {
         message.error(error)
         itemValidator.except(error);
       })
+      .finally(() => appRef.current += 1)
   }
 
   const onItemDelete = (id) => {
@@ -240,10 +240,7 @@ const FormPembelian = ({ visible, setVisible }) => {
       .catch((error) => {
         message.error(error)
       })
-      .finally(() => {
-        onPembayaranDetail()
-        onPembelianDetail()
-      })
+      .finally(() => appRef.current += 1)
   }
 
   const callbackWidgetBarangChoice = (value) => {
@@ -283,40 +280,59 @@ const FormPembelian = ({ visible, setVisible }) => {
         Authorization: jwt.get()
       }
     }
-
+    // payload = {...pembayaran, ...payload}
     http.privateHTTP.put(url, pembayaran, config)
       .then((response) => {
         setPembayaran(response.data)
-        onPembelianDetail()
       })
       .catch((error) => {
         message.error(error)
         pembayaranValidator.except(error);
       })
+      .finally(() => appRef.current += 1)
   }
 
   useEffect(() => {
-    if (pembelian.id) {
-      onItemList();
+    if (appRef.current > 0) {
+      appRef.current = 0;
+      onItemList()
       onPembayaranDetail();
+      onPembelianDetail();
     }
-  }, [pembelian]);
+  }, [appRef.current]);
+
 
   return (
     <>
       <Dialog
         maximizable={true}
+        maximized={true}
         resizable={true}
-        header={"Pembelian"}
+        header={(
+          <div className={"flex gap-2 mb-3"}>
+            <span>Pembelian</span>
+            <Tag value={`Dibayar ${formatter.formatCurrency(pembayaran.dibayar)}`} />
+            <Tag value={`Sisa ${formatter.formatCurrency(pembayaran.sisa)}`} />
+            <Tag value={`Kembali ${formatter.formatCurrency(pembayaran.kembali)}`} />
+            <Tag value={`Total ${formatter.formatCurrency(pembayaran.total)}`} />
+            <Tag value={`${pembelian.is_draft ? 'Draft' : 'Published'}`} />
+            {pembayaran.metode === 'kredit' && (
+              <>
+                <Tag value={`Tempo ${pembayaran.tempo} hari`} />
+                <Tag value={`Jatuh Tempo: ${formatter.formatDate(pembayaran.jatuh_tempo)}`} />
+              </>
+            )}
+          </div>
+        )}
         visible={visible}
         onHide={() => setVisible(!visible)}
+        footer={() => (
+          <>
+            <Button disabled={!pembelian.is_draft} onClick={onPembelianPublish}>Publish</Button>
+          </>
+        )}
       >
         <Fieldset legend={"Detail Pembelian"} className={"mb-3"}>
-          <div className="formgrid grid">
-            <div className="field col">
-              <PrimeWidgetBarcode value={pembelian.nomor || "BLI-XXXX"}/>
-            </div>
-          </div>
           <div className="formgrid grid">
             <div className="field col">
               <label>Nomor</label>
@@ -335,9 +351,10 @@ const FormPembelian = ({ visible, setVisible }) => {
               <label>Tanggal</label>
               <Calendar
                 value={new Date(Date.parse(pembelian.tanggal))}
-                onChange={(e) => onPembelianUpdate({tanggal: e.value})}
+                onChange={(e) => onPembelianUpdate({tanggal: e.value.toISOString()})}
                 className={`w-full ${pembelianValidator.primeInvalidField('tanggal')}`}
               />
+              <PrimeWidgetValidationMessage messages={pembelianValidator.get('tanggal')} />
             </div>
             <div className="field col">
               <label>Nama Supplier</label>
@@ -402,9 +419,7 @@ const FormPembelian = ({ visible, setVisible }) => {
           )}
           editMode="row"
           dataKey="id"
-          onRowEditComplete={(e) => {
-            onItemUpdate(e.newData)
-          }}
+          onRowEditComplete={(e) => { onItemUpdate(e.newData)}}
         >
           <Column field={"nama_barang"} header={"Nama"}></Column>
           <Column field={"satuan"} header={"Satuan"}></Column>
@@ -414,6 +429,9 @@ const FormPembelian = ({ visible, setVisible }) => {
             header={"Harga"}
             editor={(options) => (
               <InputNumber
+                locale={LOCALE}
+                currency={CURRENCY}
+                mode="currency"
                 value={options.value}
                 onValueChange={(e) => options.editorCallback(e.value)}
               />
@@ -422,16 +440,143 @@ const FormPembelian = ({ visible, setVisible }) => {
           <Column
             field={"diskon"}
             header={"Diskon"}
+            editor={(options) => (
+              <InputNumber
+                value={options.value}
+                onValueChange={(e) => options.editorCallback(e.value)}
+              />
+            )}
           ></Column>
           <Column
             field={"quantity"}
             header={"Quantity"}
+            editor={(options) => (
+              <InputNumber
+                value={options.value}
+                onValueChange={(e) => options.editorCallback(e.value)}
+              />
+            )}
           ></Column>
           <Column field={"stok_barang"} header={"Stok"}></Column>
           <Column field={"saldo"} header={"Saldo"}></Column>
           <Column field={"total"} header={"Total"}></Column>
           <Column rowEditor={() => pembelian.is_draft} bodyStyle={{ textAlign: 'center' }}></Column>
         </DataTable>
+        <Fieldset legend={"Detail Pembayaran"} className={"mb-3 mt-4"}>
+          <div className="formgrid grid">
+            <div className="field col">
+              <label>Total</label>
+              <InputNumber
+                disabled={true}
+                readOnly={true}
+                locale={LOCALE}
+                currency={CURRENCY}
+                mode="currency"
+                value={pembayaran.total}
+                className={"w-full"}
+              />
+            </div>
+            <div className="field col">
+              <label>Kembali</label>
+              <InputNumber
+                disabled={true}
+                readOnly={true}
+                locale={LOCALE}
+                currency={CURRENCY}
+                mode="currency"
+                value={pembayaran.kembali}
+                className={"w-full"}
+              />
+            </div>
+            <div className="field col">
+              <label>Sisa</label>
+              <InputNumber
+                disabled={true}
+                readOnly={true}
+                locale={LOCALE}
+                currency={CURRENCY}
+                mode="currency"
+                value={pembayaran.sisa}
+                className={"w-full"}
+              />
+            </div>
+          </div>
+
+          <div className="formgrid grid">
+
+            <div className="field col">
+              <label>PPN %</label>
+              <InputNumber
+                value={pembayaran.ppn}
+                onChange={(e) => changeListener.changeNumber('ppn', e.value, pembayaran, setPembayaran)}
+                className={`w-full ${pembelianValidator.primeInvalidField('ppn')}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onPembayaranUpdate();
+                  }
+                }}
+              />
+            </div>
+            <div className="field col">
+              <label>Diskon %</label>
+              <InputNumber
+                value={pembayaran.diskon}
+                onChange={(e) => changeListener.changeNumber('diskon', e.value, pembayaran, setPembayaran)}
+                className={`w-full ${pembelianValidator.primeInvalidField('diskon')}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onPembayaranUpdate();
+                  }
+                }}
+              />
+            </div>
+            <div className="field col">
+              <label>Dibayar</label>
+              <InputNumber
+                locale={LOCALE}
+                currency={CURRENCY}
+                mode="currency"
+                value={pembayaran.dibayar}
+                onChange={(e) => {
+                  changeListener.changeNumber('dibayar', e.value, pembayaran, setPembayaran)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onPembayaranUpdate();
+                  }
+                }}
+                className={`w-full ${pembelianValidator.primeInvalidField('dibayar')}`}
+              />
+            </div>
+            {pembayaran.metode === 'kredit' && (
+              <>
+                <div className="field col">
+                  <label>Tempo Pembayaran (hari)</label>
+                  <InputNumber
+                    value={pembayaran.tempo}
+                    onChange={(e) => changeListener.changeNumber('tempo', e.value, pembayaran, setPembayaran)}
+                    className={`w-full ${pembelianValidator.primeInvalidField('tempo')}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onPembayaranUpdate();
+                      }
+                    }}
+                  />
+                </div>
+                <div className="field col">
+                  <label>Jatuh Tempo</label>
+                  <InputText
+                    disabled={true}
+                    readOnly={true}
+                    value={formatter.formatDate(pembayaran.jatuh_tempo)}
+                    className={"w-full"}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </Fieldset>
+
       </Dialog>
     </>
   )

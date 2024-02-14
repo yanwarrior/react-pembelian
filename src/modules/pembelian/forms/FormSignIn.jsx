@@ -47,7 +47,6 @@ const FormSignIn = () => {
       visible={!application.isAuthenticated}
       onHide={() => {}}
     >
-      {JSON.stringify(user)}
       <div className="formgrid grid flex flex-column">
         <div className="field col">
           <label>Username</label>
