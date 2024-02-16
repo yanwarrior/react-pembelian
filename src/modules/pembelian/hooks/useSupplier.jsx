@@ -1,25 +1,24 @@
-import useModule from "../../../libs/hooks/useModule.jsx";
-import {useState} from "react";
-import {BARANG, BARANG_VALIDATOR, PAGINATION_INIT} from "../settings.jsx";
+import {PAGINATION_INIT, SUPPLIER, SUPPLIER_VALIDATOR} from "../settings.jsx";
 import useValidator from "../../../libs/hooks/useValidator.jsx";
+import {useState} from "react";
+import useModule from "../../../libs/hooks/useModule.jsx";
 
-const useBarang = () => {
+const useSupplier = () => {
   const module = useModule();
 
   const [collections, setCollections] = useState([]);
   const [paging, setPaging] = useState(PAGINATION_INIT);
-  const [state, setState] = useState(BARANG);
-  const validator = useValidator(BARANG_VALIDATOR);
+  const [state, setState] = useState(SUPPLIER);
+  const validator = useValidator(SUPPLIER_VALIDATOR);
 
   const resetState = () => {
-    setState(BARANG)
+    setState(SUPPLIER)
   }
 
   const resetCollection = () => {
     setCollections([]);
     setPaging(PAGINATION_INIT);
   }
-
 
   const resetAll = () => {
     resetState();
@@ -29,7 +28,7 @@ const useBarang = () => {
 
   const all = async (url, params) => {
     try {
-      url = url ? url : `${module.baseURL}/barang/`;
+      url = url ? url : `${module.baseURL}/supplier/`;
       const response = await module.http.privateHTTP.get(url, module.configHTTP(params));
       const { results, ...pagination } = response.data
       setCollections(results);
@@ -41,8 +40,8 @@ const useBarang = () => {
 
   const get = async (id) => {
     try {
-      validator.reset();
-      const url = `${module.baseURL}/barang/${id}/`;
+      validator.reset()
+      const url = `${module.baseURL}/supplier/${id}/`;
       const response = await module.http.privateHTTP.get(url, module.configHTTP());
       setState(response.data)
     } catch (error) {
@@ -53,7 +52,7 @@ const useBarang = () => {
   const create = async () => {
     try {
       validator.reset();
-      const url = `${module.baseURL}/barang/`;
+      const url = `${module.baseURL}/supplier/`;
       const response = await module.http.privateHTTP.post(url, state, module.configHTTP());
       module.message.success(response);
       resetState()
@@ -78,7 +77,7 @@ const useBarang = () => {
   const update = async () => {
     try {
       validator.reset();
-      const url = `${module.baseURL}/barang/${state.id}/`
+      const url = `${module.baseURL}/supplier/${state.id}/`
       const response = await  module.http.privateHTTP.put(url, state, module.configHTTP());
       resetState()
       module.message.success(response);
@@ -93,7 +92,7 @@ const useBarang = () => {
     module.message.confirmRemove(async () => {
       try {
         validator.reset();
-        const url = `${module.baseURL}/barang/${state.id}/`;
+        const url = `${module.baseURL}/supplier/${state.id}/`;
         const response = await module.http.privateHTTP.delete(url, module.configHTTP())
         module.message.success(response);
         resetState()
@@ -118,18 +117,20 @@ const useBarang = () => {
     },
     behaviors: {
       all,
+      create,
       search,
       paginate,
-      create,
-      get,
       update,
       remove,
       resetAll,
       resetCollection,
       resetState,
+      get
     },
     module,
   }
 }
 
-export default useBarang;
+
+
+export default useSupplier;

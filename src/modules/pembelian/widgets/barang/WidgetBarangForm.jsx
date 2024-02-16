@@ -52,7 +52,7 @@ const WidgetBarangForm = ({ barang }) => {
             <label>Satuan</label>
             <InputText
               value={barang.data.state.satuan}
-              onChange={(e) => barang.module.changeListener.change("satuan", e.value, barang)}
+              onChange={(e) => barang.module.changeListener.change("satuan", e.target.value, barang)}
               className={`w-full ${barang.data.validator.primeInvalidField('satuan')}`}
             />
             <PrimeWidgetValidationMessage messages={barang.data.validator.get('satuan')}/>
@@ -106,7 +106,10 @@ const WidgetBarangForm = ({ barang }) => {
               <Button onClick={barang.behaviors.remove} outlined={true}>
                 <span className="pi pi-trash mr-2"></span> Hapus
               </Button>
-              <Button onClick={barang.behaviors.resetState} outlined={true}>
+              <Button onClick={() => {
+                barang.data.validator.reset();
+                barang.behaviors.resetState();
+              }} outlined={true}>
                 <span className="pi pi-times-circle mr-2"></span> Batal
               </Button>
               <Button onClick={barang.behaviors.update} >
