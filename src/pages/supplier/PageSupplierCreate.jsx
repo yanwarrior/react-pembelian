@@ -9,6 +9,7 @@ import {BASE_URL} from "../../libs/config/settings.js";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import WidgetCommonTitleAction from "../../widgets/commons/WidgetCommonTitleAction.jsx";
 import WidgetCommonValidator from "../../widgets/commons/WidgetCommonValidator.jsx";
+import WidgetCommonRow from "../../widgets/commons/WidgetCommonRow.jsx";
 
 const supplierInit = {
   id: "",
@@ -63,10 +64,10 @@ const PageSupplierCreate = () => {
 
   return (
     <>
-      <Container className={"mb-4 mt-4 w-50"}>
+      <Container className={"mb-4 mt-4"}>
         <WidgetCommonTitleAction title={"Buat Supplier"} action={null} />
-        <Row className={"mb-3"}>
-          <Col md={5}>
+        <WidgetCommonRow>
+          <Col>
             <Form.Group>
               <Form.Label>Nomor</Form.Label>
               <Form.Control
@@ -88,9 +89,6 @@ const PageSupplierCreate = () => {
               <WidgetCommonValidator messages={supplierValidator.get('nama')} />
             </Form.Group>
           </Col>
-        </Row>
-
-        <Row className={"mb-3"}>
           <Col>
             <Form.Group>
               <Form.Label>Telepon</Form.Label>
@@ -102,7 +100,8 @@ const PageSupplierCreate = () => {
               <WidgetCommonValidator messages={supplierValidator.get('telepon')} />
             </Form.Group>
           </Col>
-
+        </WidgetCommonRow>
+        <WidgetCommonRow>
           <Col>
             <Form.Group>
               <Form.Label>Alamat</Form.Label>
@@ -116,10 +115,9 @@ const PageSupplierCreate = () => {
               <WidgetCommonValidator messages={supplierValidator.get('alamat')} />
             </Form.Group>
           </Col>
-        </Row>
-
-        <Row className={"mb-3"}>
-          <Col md={3}>
+        </WidgetCommonRow>
+        <WidgetCommonRow>
+          <Col>
             <Form.Group>
               <Form.Label>Bank</Form.Label>
               <Form.Control
@@ -152,14 +150,14 @@ const PageSupplierCreate = () => {
               <WidgetCommonValidator messages={supplierValidator.get('contact_person')} />
             </Form.Group>
           </Col>
-        </Row>
+        </WidgetCommonRow>
 
-        <Row>
+        <WidgetCommonRow>
           <Col className={"d-flex justify-content-end gap-3"}>
-            <Button onClick={() => navigate(-1)} variant={'outline-secondary'}>Batal</Button>
+            <Button onClick={() => navigate(-1)} variant={'secondary'}>Batal</Button>
             <Button onClick={onSupplierCreate}>Simpan</Button>
           </Col>
-        </Row>
+        </WidgetCommonRow>
       </Container>
     </>
   )

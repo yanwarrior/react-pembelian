@@ -66,7 +66,7 @@ const WidgetSupplierChoice = ({callback}) => {
   return (
     <>
       <WidgetCommonLoadingButton>
-        <Button onClick={handleShow}>
+        <Button variant={"dark"} onClick={handleShow}>
           <BsBoxArrowUpRight /> {" "} Supplier
         </Button>
       </WidgetCommonLoadingButton>

@@ -9,6 +9,8 @@ import {BASE_URL} from "../../libs/config/settings.js";
 import {Button, Col, Container, FloatingLabel, Form, Row} from "react-bootstrap";
 import WidgetCommonTitleAction from "../../widgets/commons/WidgetCommonTitleAction.jsx";
 import WidgetCommonValidator from "../../widgets/commons/WidgetCommonValidator.jsx";
+import WidgetCommonRow from "../../widgets/commons/WidgetCommonRow.jsx";
+import WidgetCommonLoadingButton from "../../widgets/commons/WidgetCommonLoadingButton.jsx";
 
 const barangInit = {
   id: "",
@@ -109,71 +111,58 @@ const PageBarangDetail = () => {
 
   return (
     <>
-      <Container className={"mt-4 mb-4 w-50"}>
+      <Container className={"mt-4 mb-4"}>
         <WidgetCommonTitleAction title={"Update Barang"} action={null} />
-        <Row className={"mb-3"}>
-          <Col md={5}>
-            <FloatingLabel label={"Nomor"}>
+        <WidgetCommonRow>
+          <Col>
+            <Form.Group>
+              <Form.Label>Nomor</Form.Label>
               <Form.Control
                 name={'nomor'}
                 value={barang.nomor}
                 onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
               />
               <WidgetCommonValidator messages={barangValidator.get('nomor')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
-        </Row>
-
-        <Row className={"mb-3"}>
           <Col>
-            <FloatingLabel label={"Nama"}>
+            <Form.Group>
+              <Form.Label>Nama</Form.Label>
               <Form.Control
                 name={'nama'}
                 value={barang.nama}
                 onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
               />
               <WidgetCommonValidator messages={barangValidator.get('nama')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
-        </Row>
-
-        <Row className={"mb-3"}>
-          <Col >
-            <FloatingLabel label={"Jenis"}>
+          <Col>
+            <Form.Group>
+              <Form.Label>Jenis</Form.Label>
               <Form.Control
                 name={'jenis'}
                 value={barang.jenis}
                 onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
               />
               <WidgetCommonValidator messages={barangValidator.get('jenis')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
+        </WidgetCommonRow>
+        <WidgetCommonRow>
           <Col>
-            <FloatingLabel label={"Satuan"}>
+            <Form.Group>
+              <Form.Label>Satuan</Form.Label>
               <Form.Control
                 name={'satuan'}
                 value={barang.satuan}
                 onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
               />
               <WidgetCommonValidator messages={barangValidator.get('satuan')} />
-            </FloatingLabel>
-          </Col>
-        </Row>
-
-        <Row className={"mb-3"}>
-          <Col >
-            <FloatingLabel label={"Harga Jual"}>
-              <Form.Control
-                name={'harga_jual'}
-                value={barang.harga_jual}
-                onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
-                type={"number"}
-              />
-              <WidgetCommonValidator messages={barangValidator.get('harga_jual')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
           <Col>
-            <FloatingLabel label={"Harga Beli"}>
+            <Form.Group>
+              <Form.Label>Harga Beli</Form.Label>
               <Form.Control
                 name={'harga_beli'}
                 value={barang.harga_beli}
@@ -181,10 +170,23 @@ const PageBarangDetail = () => {
                 type={"number"}
               />
               <WidgetCommonValidator messages={barangValidator.get('harga_beli')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
           <Col>
-            <FloatingLabel label={"Stok"}>
+            <Form.Group>
+              <Form.Label>Harga Jual</Form.Label>
+              <Form.Control
+                name={'harga_jual'}
+                value={barang.harga_jual}
+                onChange={(e) => onChangeListener.onChangeText(e, barang, setBarang)}
+                type={"number"}
+              />
+              <WidgetCommonValidator messages={barangValidator.get('harga_jual')} />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group>
+              <Form.Label>Stok</Form.Label>
               <Form.Control
                 name={'stok'}
                 value={barang.stok}
@@ -192,16 +194,22 @@ const PageBarangDetail = () => {
                 type={"number"}
               />
               <WidgetCommonValidator messages={barangValidator.get('stok')} />
-            </FloatingLabel>
+            </Form.Group>
           </Col>
-        </Row>
-        <Row>
+        </WidgetCommonRow>
+        <WidgetCommonRow>
           <Col className={"d-flex justify-content-end gap-3"}>
-            <Button onClick={() => navigate(-1)} variant={'outline-secondary'}>Batal</Button>
-            <Button onClick={onBarangDelete} variant={'outline-danger'}>Hapus</Button>
-            <Button onClick={onBarangUpdate}>Simpan</Button>
+            <WidgetCommonLoadingButton variant={"secondary"}>
+              <Button onClick={() => navigate(-1)} variant={'secondary'}>Keluar</Button>
+            </WidgetCommonLoadingButton>
+            <WidgetCommonLoadingButton variant={"danger"}>
+              <Button onClick={onBarangDelete} variant={'danger'}>Hapus</Button>
+            </WidgetCommonLoadingButton>
+            <WidgetCommonLoadingButton variant={"primary"}>
+              <Button onClick={onBarangUpdate}>Simpan</Button>
+            </WidgetCommonLoadingButton>
           </Col>
-        </Row>
+        </WidgetCommonRow>
       </Container>
     </>
   )

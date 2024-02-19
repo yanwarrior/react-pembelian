@@ -14,6 +14,7 @@ import WidgetCommonPagination from "../../widgets/commons/WidgetCommonPagination
 import WidgetCommonLoadingTable from "../../widgets/commons/WidgetCommonLoadingTable.jsx";
 import WidgetCommonLoadingInput from "../../widgets/commons/WidgetCommonLoadingInput.jsx";
 import WidgetCommonLoadingButton from "../../widgets/commons/WidgetCommonLoadingButton.jsx";
+import WidgetCommonRow from "../../widgets/commons/WidgetCommonRow.jsx";
 
 const paginateInit = {
   next: null,
@@ -89,64 +90,65 @@ const PagePembelianList = () => {
             </Button>
           </WidgetCommonLoadingButton>
         )} />
-        <Row className={"mb-3"}>
+        <WidgetCommonRow>
           <Col>
-            <Card>
-              <Card.Body>
-                <WidgetCommonLoadingInput>
-                  <WidgetCommonFilter
-                    callback={onPembelianFilter}
-                    filterset={[
-                      {name: "nomor", label: "Nomor Pembelian"},
-                      {name: "supplier__nama", label: "Nama Supplier"},
-                      {name: "supplier__telepon", label: "Telepon Supplier"},
-                      {name: "supplier__contact_person", label: "Contact Person"},
-                    ]} />
-                </WidgetCommonLoadingInput>
-              </Card.Body>
-              <WidgetCommonLoadingTable>
-
-                <Table responsive={true} borderless={true} striped={true}>
-                  <thead>
-                    <tr>
-                      <th>Nomor</th>
-                      <th>Tanggal</th>
-                      <th>Nomor Supplier</th>
-                      <th>Nama Supplier</th>
-                      <th>Jumlah Barang</th>
-                      <th>Status Pembayaran</th>
-                      <th>Metode Pembayaran</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {daftarPembelian.map((pembelian) => (
-                    <tr key={pembelian.id}>
-                      <td>
-                        <Nav.Link onClick={() => navigate("/pembelian/detail", {state: {id: pembelian.id}})} className={"text-primary"}>
-                          {pembelian.nomor}
-                        </Nav.Link>
-                      </td>
-                      <td>{formatter.formatDate(pembelian.tanggal)}</td>
-                      <td>{pembelian.nomor_supplier}</td>
-                      <td>{pembelian.nama_supplier}</td>
-                      <td>{pembelian.jumlah_barang}</td>
-                      <td><WidgetPembelianStatusPembayaran lunas={pembelian.pembayaran_lunas} /> </td>
-                      <td>{pembelian.metode_pembayaran}</td>
-                      <td><WidgetPembelianDraft isDraft={pembelian.is_draft} /></td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </Table>
-              </WidgetCommonLoadingTable>
-              <Card.Footer>
-                <WidgetCommonLoadingButton>
-                  <WidgetCommonPagination pagination={paginatePembelian} callback={onPembelianPaginate} />
-                </WidgetCommonLoadingButton>
-              </Card.Footer>
-            </Card>
+            <WidgetCommonLoadingInput>
+              <WidgetCommonFilter
+                callback={onPembelianFilter}
+                filterset={[
+                  {name: "nomor", label: "Nomor Pembelian"},
+                  {name: "supplier__nama", label: "Nama Supplier"},
+                  {name: "supplier__telepon", label: "Telepon Supplier"},
+                  {name: "supplier__contact_person", label: "Contact Person"},
+                ]} />
+            </WidgetCommonLoadingInput>
           </Col>
-        </Row>
+        </WidgetCommonRow>
+
+        <WidgetCommonRow>
+          <Col>
+            <Table responsive={true} borderless={true} striped={true}>
+              <thead>
+              <tr>
+                <th>Nomor</th>
+                <th>Tanggal</th>
+                <th>Nomor Supplier</th>
+                <th>Nama Supplier</th>
+                <th>Jumlah Barang</th>
+                <th>Status Pembayaran</th>
+                <th>Metode Pembayaran</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              {daftarPembelian.map((pembelian) => (
+                <tr key={pembelian.id}>
+                  <td>
+                    <Nav.Link onClick={() => navigate("/pembelian/detail", {state: {id: pembelian.id}})} className={"text-primary"}>
+                      {pembelian.nomor}
+                    </Nav.Link>
+                  </td>
+                  <td>{formatter.formatDate(pembelian.tanggal)}</td>
+                  <td>{pembelian.nomor_supplier}</td>
+                  <td>{pembelian.nama_supplier}</td>
+                  <td>{pembelian.jumlah_barang}</td>
+                  <td><WidgetPembelianStatusPembayaran lunas={pembelian.pembayaran_lunas} /> </td>
+                  <td>{pembelian.metode_pembayaran}</td>
+                  <td><WidgetPembelianDraft isDraft={pembelian.is_draft} /></td>
+                </tr>
+              ))}
+              </tbody>
+            </Table>
+          </Col>
+        </WidgetCommonRow>
+
+        <WidgetCommonRow>
+          <Col>
+            <WidgetCommonLoadingButton>
+              <WidgetCommonPagination pagination={paginatePembelian} callback={onPembelianPaginate} />
+            </WidgetCommonLoadingButton>
+          </Col>
+        </WidgetCommonRow>
       </Container>
     </>
   )

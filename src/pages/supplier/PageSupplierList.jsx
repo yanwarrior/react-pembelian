@@ -8,6 +8,7 @@ import {Button, Card, Col, Container, Nav, Row, Table} from "react-bootstrap";
 import WidgetCommonTitleAction from "../../widgets/commons/WidgetCommonTitleAction.jsx";
 import WidgetCommonFilter from "../../widgets/commons/WidgetCommonFilter.jsx";
 import WidgetCommonPagination from "../../widgets/commons/WidgetCommonPagination.jsx";
+import WidgetCommonRow from "../../widgets/commons/WidgetCommonRow.jsx";
 
 const paginateInit = {
   next: null,
@@ -64,59 +65,61 @@ const PageSupplierList = () => {
             Buat Supplier
           </Button>
         )}/>
-        <Row className={"mb-3"}>
+        <WidgetCommonRow>
           <Col>
-            <Card>
-              <Card.Body>
-                <WidgetCommonFilter
-                  callback={onSupplierFilter}
-                  filterset={[
-                    {name: "nomor", label: "Nomor"},
-                    {name: "nama", label: "Nama"},
-                    {name: "telepon", label: "Telepon"},
-                    {name: "bank", label: "Bank"},
-                    {name: "contact_person", label: "Contact Person"},
-                  ]} />
-              </Card.Body>
-              <Table responsive={true} borderless={true} striped={true}>
-                <thead>
-                  <tr>
-                    <th>Nomor</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Telepon</th>
-                    <th>Contact Person</th>
-                    <th>Bank</th>
-                    <th>Rekening</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {daftarSupplier.map((supplier) => (
-                  <tr key={supplier.id}>
-                    <td>
-                      <Nav.Link
-                        className={"text-primary"}
-                        onClick={() => navigate("/supplier/update", {state: {id: supplier.id}})}
-                      >
-                        {supplier.nomor}
-                      </Nav.Link>
-                    </td>
-                    <td>{supplier.nama}</td>
-                    <td>{supplier.alamat}</td>
-                    <td>{supplier.telepon}</td>
-                    <td>{supplier.contact_person}</td>
-                    <td>{supplier.bank}</td>
-                    <td>{supplier.rekening}</td>
-                  </tr>
-                ))}
-                </tbody>
-              </Table>
-              <Card.Footer>
-                <WidgetCommonPagination pagination={paginateSupplier} callback={onSupplierPaginate} />
-              </Card.Footer>
-            </Card>
+            <WidgetCommonFilter
+              callback={onSupplierFilter}
+              filterset={[
+                {name: "nomor", label: "Nomor"},
+                {name: "nama", label: "Nama"},
+                {name: "telepon", label: "Telepon"},
+                {name: "bank", label: "Bank"},
+                {name: "contact_person", label: "Contact Person"},
+              ]} />
           </Col>
-        </Row>
+        </WidgetCommonRow>
+        <WidgetCommonRow>
+          <Col>
+            <Table responsive={true} bordered={true} striped={true}>
+              <thead>
+              <tr>
+                <th>Nomor</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Telepon</th>
+                <th>Contact Person</th>
+                <th>Bank</th>
+                <th>Rekening</th>
+              </tr>
+              </thead>
+              <tbody>
+              {daftarSupplier.map((supplier) => (
+                <tr key={supplier.id}>
+                  <td>
+                    <Nav.Link
+                      className={"text-primary"}
+                      onClick={() => navigate("/supplier/update", {state: {id: supplier.id}})}
+                    >
+                      {supplier.nomor}
+                    </Nav.Link>
+                  </td>
+                  <td>{supplier.nama}</td>
+                  <td>{supplier.alamat}</td>
+                  <td>{supplier.telepon}</td>
+                  <td>{supplier.contact_person}</td>
+                  <td>{supplier.bank}</td>
+                  <td>{supplier.rekening}</td>
+                </tr>
+              ))}
+              </tbody>
+            </Table>
+          </Col>
+        </WidgetCommonRow>
+        <WidgetCommonRow>
+          <Col>
+            <WidgetCommonPagination pagination={paginateSupplier} callback={onSupplierPaginate} />
+          </Col>
+        </WidgetCommonRow>
       </Container>
     </>
   )

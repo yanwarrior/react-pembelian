@@ -2,6 +2,7 @@ import {Container, Nav, Navbar } from "react-bootstrap";
 import {useContext} from "react";
 import {ContextApplication} from "../../libs/config/contexts.js";
 import useJWT from "../../libs/hooks/useJWT.jsx";
+import PropTypes from "prop-types";
 
 
 const WidgetCommonNavbar = () => {
@@ -15,12 +16,12 @@ const WidgetCommonNavbar = () => {
   }
 
   return (
-    <Navbar expand="lg"  bg="dark" data-bs-theme="dark">
+    <Navbar expand="lg"  bg="dark" data-bs-theme="dark" >
       <Container>
         <Navbar.Brand href="#">Sistem Pembelians</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         {applcation.isAuthenticated && (
-          <Navbar.Collapse id="basic-navbar-nav">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             <Nav className="me-auto">
               <Nav.Link href="#/">Barang</Nav.Link>
               <Nav.Link href="#/supplier">Supplier</Nav.Link>
@@ -34,5 +35,6 @@ const WidgetCommonNavbar = () => {
     </Navbar>
   )
 }
+
 
 export default WidgetCommonNavbar;

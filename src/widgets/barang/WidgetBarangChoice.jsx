@@ -70,7 +70,7 @@ const WidgetBarangChoice = ({ callback }) => {
   return (
     <>
       <WidgetCommonLoadingButton>
-        <Button onClick={handleShow}>
+        <Button variant={"dark"} onClick={handleShow}>
           <BsBoxArrowUpRight /> {" "}Barang
         </Button>
       </WidgetCommonLoadingButton>
