@@ -4,7 +4,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import useHTTP from "../../libs/hooks/useHTTP.jsx";
 import useJWT from "../../libs/hooks/useJWT.jsx";
 import useMessage from "../../libs/hooks/useMessage.jsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import useValidator from "../../libs/hooks/useValidator.jsx";
 import {BASE_URL} from "../../libs/config/settings.js";
 import useChangeListener from "../../libs/hooks/useChangeListener.jsx";
