@@ -7,7 +7,7 @@ import {BASE_URL} from "../../libs/config/settings.js";
 import {useEffect, useRef, useState} from "react";
 import useValidator from "../../libs/hooks/useValidator.jsx";
 import WidgetCommonTitleAction from "../../widgets/commons/WidgetCommonTitleAction.jsx";
-import {Button, ButtonGroup, Card, Col, Container, Form, InputGroup, Nav, Row, Table} from "react-bootstrap";
+import {Button, Col, Container, Form, InputGroup, Nav, Table} from "react-bootstrap";
 import WidgetCommonValidator from "../../widgets/commons/WidgetCommonValidator.jsx";
 import WidgetCommonFilter from "../../widgets/commons/WidgetCommonFilter.jsx";
 import WidgetCommonPagination from "../../widgets/commons/WidgetCommonPagination.jsx";
@@ -24,7 +24,6 @@ import {itemInit, itemValidatorInit} from "../../data/item.js";
 import {paginationInit} from "../../data/commons.js";
 import {pembayaranInit, pembayaranValidatorInit} from "../../data/pembayaran.js";
 import WidgetCommonRow from "../../widgets/commons/WidgetCommonRow.jsx";
-import WidgetCommonNavbar from "../../widgets/commons/WidgetCommonNavbar.jsx";
 
 const PagePembelianDetail = () => {
   const { state } = useLocation();
@@ -419,6 +418,7 @@ const PagePembelianDetail = () => {
                   <InputGroup>
                     <Form.Control
                       type={"number"}
+                      name="diskon"
                       value={item.diskon}
                       onChange={(e) => onChangeListener.onChangeNumber(e, item, setItem)} />
                   </InputGroup>
@@ -429,7 +429,7 @@ const PagePembelianDetail = () => {
                 <Form.Group>
                   <Form.Label>Quantity</Form.Label>
                   <InputGroup>
-                    <Form.Control type={"number"} value={item.quantity} onChange={(e) => onChangeListener.onChangeNumber(e, item, setItem)} />
+                    <Form.Control name="quantity" type={"number"} value={item.quantity} onChange={(e) => onChangeListener.onChangeNumber(e, item, setItem)} />
                   </InputGroup>
                   <WidgetCommonValidator messages={itemValidator.get('quantity')} />
                 </Form.Group>
